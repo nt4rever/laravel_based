@@ -18,12 +18,15 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        \App\Models\User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => '123456',
-            'type' => UserRole::ADMIN,
-            'status' => Status::ACTIVE
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Admin User',
+        //     'email' => 'admin@example.com',
+        //     'password' => '123456',
+        //     'type' => UserRole::ADMIN,
+        //     'status' => Status::ACTIVE
+        // ]);
+        $this->call([
+            AddUser::class
         ]);
     }
 }

@@ -15,7 +15,7 @@ class ApiController extends Controller
     {
         Log::error($error);
         $statusCode = empty($status) ? ResponseCode::ERROR_SERVER : $status;
-        $messageCode = empty($status) ? __('validation.sever_error') : $message;
+        $messageCode = empty($message) ? __('validation.sever_error') : $message;
         if (App::isLocal())
             return $this->failure($messageCode, $statusCode, $error);
         return $this->failure($messageCode, $statusCode);
