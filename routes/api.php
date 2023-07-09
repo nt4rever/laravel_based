@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\TodoController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,14 @@ Route::middleware(['auth:sanctum',])->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::get('/all', 'index');
             Route::delete('/{id}', 'destroy')->middleware(['ability:0']); // 0 : Admin
+        });
+    });
+
+    Route::prefix('todo')->group(function () {
+        Route::controller(TodoController::class)->group(function () {
+            Route::post('/', 'store');
+            Route::get('/all', 'adminGetAll')->middleware(['ability:0']); // 0 : Admin
+            Route::get('/', 'index');
         });
     });
 });

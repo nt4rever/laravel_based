@@ -45,10 +45,13 @@ class AuthController extends ApiController
     public function logout(Request $request)
     {
         try {
+            // revoke current accessToken in this request incoming
             // $request->user()->currentAccessToken()->delete();
+            // revoke all accessToke in Database
             Auth::user()->tokens()->delete();
+            return $this->success(null, ResponseCode::SUCCESS_DATA);
         } catch (\Throwable $th) {
-            //throw $th;
+            return $this->error($th, $th->getMessage(), $th->getCode());
         }
     }
 }

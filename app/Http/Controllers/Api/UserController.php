@@ -8,7 +8,6 @@ use App\Enums\ResponseCode;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Http\Controllers\ApiController;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends ApiController
