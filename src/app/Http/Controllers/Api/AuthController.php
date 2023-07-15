@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Services\FCMService;
 use Validator;
 use App\Enums\Status;
 use App\Enums\ResponseCode;
@@ -11,6 +12,12 @@ use App\Http\Controllers\ApiController;
 
 class AuthController extends ApiController
 {
+    private $fcmService;
+
+    public function __construct(FCMService $fcmService){
+        $this->fcmService = $fcmService;
+    }
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -31,7 +38,14 @@ class AuthController extends ApiController
                 throw new \Exception();
             $expiresAt = now()->addMinutes(1440);
 
-            $tokenResult = $user->createToken('authToken', [$user->type], $expiresAt)->plainTextToken;
+            $token = $user->createToken('authToken', [$user->type], $expiresAt);
+            $tokenResult = $token->plainTextToken;
+            if ($request->has('device_token')) {
+                $user->tokens()->where('id', $token->accessToken->id)
+                    ->update([
+                        'device_token' => $request->device_token,
+                    ]);
+            }
             return $this->success([
                 'access_token' => $tokenResult,
                 'token_type' => 'Bearer',
@@ -53,5 +67,9 @@ class AuthController extends ApiController
         } catch (\Throwable $th) {
             return $this->error($th, $th->getMessage(), $th->getCode());
         }
+    }
+
+    public function sendNotification(){
+        $this->fcmService->sendNotification([], 1);
     }
 }

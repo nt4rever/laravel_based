@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(10)->create();
+        // \App\Models\User::factory(10)->create();
 
         \App\Models\User::factory()->create([
             'name' => 'Admin User',
@@ -25,8 +25,8 @@ class DatabaseSeeder extends Seeder
             'type' => UserRole::ADMIN,
             'status' => Status::ACTIVE
         ]);
-        // $this->call([
-        //     AddUser::class
-        // ]);
+        $this->call([
+            AddUser::class
+        ]);
     }
 }
