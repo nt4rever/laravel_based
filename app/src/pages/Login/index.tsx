@@ -1,22 +1,45 @@
 import { Form, Input } from 'antd';
 import { FC, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '~/components/shared/Button';
 import { FormItem } from '~/components/shared/Form';
-import { LoginInput, useAuth } from '~/hooks';
+import { requestForToken } from '~/firebase';
+import { useAppDispatch, useLogin } from '~/hooks';
+import { ILogin } from '~/models/auth';
+import { authActions } from '~/store/ducks/auth/slice';
 
 const Login: FC = (): ReactElement => {
   const { t } = useTranslation();
-  const { login, isLoading } = useAuth();
-
-  const initialValues: LoginInput = {
-    username: '',
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const loginMutate = useLogin();
+  const initialValues: ILogin = {
+    email: '',
     password: ''
   };
 
-  const handleSubmit = (values: LoginInput) => {
-    login(values);
+  const handleSubmit = (values: ILogin) => {
+    const deviceToken = localStorage.getItem('device_token') || '';
+    loginMutate.mutate(
+      { ...values, device_token: deviceToken },
+      {
+        onSuccess: (data) => {
+          dispatch(
+            authActions.loginSuccess({
+              token: data.access_token
+            })
+          );
+          navigate('/');
+        },
+        onError(error: any) {
+          console.log(error);
+        }
+      }
+    );
   };
+
+  requestForToken();
 
   return (
     <div className='min-w-[464px] overflow-hidden rounded-2xl border border-solid border-[#D1D1D1] bg-white'>
@@ -31,22 +54,20 @@ const Login: FC = (): ReactElement => {
           onFinish={handleSubmit}
         >
           <FormItem
-            name='username'
+            name='email'
             required={false}
-            label={t('common.username')}
-            extra={`${t('common.acc_without')} @example.com (${t(
-              'common.example'
-            )}: tannnguci)`}
+            label={t('common.email')}
+            extra={`${t('common.example')}: example@gmail.com)`}
             rules={[
               {
                 required: true,
-                message:
-                  t('validation.username_required') || 'Please input your username!'
+                message: t('validation.username_required') || 'Please input your email!'
               },
               {
-                max: 20
+                type: 'email'
               }
             ]}
+            validateTrigger='onSubmit'
           >
             <Input type='text' placeholder='email@example.com' />
           </FormItem>
@@ -65,6 +86,7 @@ const Login: FC = (): ReactElement => {
                 max: 20
               }
             ]}
+            validateTrigger='onSubmit'
           >
             <Input type='password' placeholder={t('common.password') || 'Password'} />
           </FormItem>
@@ -72,7 +94,7 @@ const Login: FC = (): ReactElement => {
             <Button
               type='primary'
               htmlType='submit'
-              loading={isLoading}
+              loading={loginMutate.isLoading}
               className='mt-2 w-full'
             >
               {t('common.login')}

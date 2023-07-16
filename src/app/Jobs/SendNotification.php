@@ -49,7 +49,7 @@ class SendNotification implements ShouldQueue
         if ($this->isNotice) {
             $body["notification"] = [
                 "title" => 'laravel_based',
-                "body" => "message",
+                "body" => "message from tannnguci",
                 // "body" => $this->data->message,
                 "sound" => "default",
             ];

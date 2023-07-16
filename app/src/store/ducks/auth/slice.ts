@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IUser } from '~/@types/auth';
+import { IUserInfo } from '~/models/auth';
 import { saveLocalStorage, removeLocalStorage, KEY_LOCAL_STORAGE } from '~/utils/storage';
 
 export interface AuthState {
   isLoggedIn: boolean;
   accessToken?: boolean;
-  currentUser?: IUser;
+  currentUser?: IUserInfo;
 }
 
 const initialState: AuthState = {
@@ -15,7 +15,6 @@ const initialState: AuthState = {
 };
 
 interface AuthPayload {
-  user: IUser;
   token: string;
 }
 
@@ -25,8 +24,11 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess(state, action: PayloadAction<AuthPayload>) {
       state.isLoggedIn = true;
-      state.currentUser = action.payload?.user;
       saveLocalStorage(KEY_LOCAL_STORAGE.ACCESS_TOKEN, action.payload?.token);
+      return state;
+    },
+    setProfile(state, action: PayloadAction<IUserInfo>) {
+      state.currentUser = action.payload;
       return state;
     },
     logout(state) {

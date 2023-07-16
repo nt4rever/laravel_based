@@ -10,7 +10,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   function (config) {
-    // config.headers['Content-Type'] = 'application/json';
+    config.headers['Content-Type'] = 'application/json';
     if (getLocalStorage(KEY_LOCAL_STORAGE.ACCESS_TOKEN)) {
       config.headers['Authorization'] = `Bearer ${getLocalStorage(
         KEY_LOCAL_STORAGE.ACCESS_TOKEN
@@ -20,6 +20,21 @@ axiosClient.interceptors.request.use(
   },
   function (error) {
     return Promise.reject(error);
+  }
+);
+
+axiosClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error: any) => {
+    const originalConfig = error.config;
+    if (error.response.status === 401 && originalConfig?.url !== '/login') {
+      localStorage.removeItem('access_token');
+      window.location.href = '/login';
+    } else {
+      throw error.response.data;
+    }
   }
 );
 

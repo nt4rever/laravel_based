@@ -85,4 +85,8 @@ class UserController extends ApiController
             return $this->error($error, $error->getMessage(), $error->getCode());
         }
     }
+
+    public function getMe(Request $request){
+        return $this->success($request->user());
+    }
 }

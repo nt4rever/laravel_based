@@ -6,6 +6,7 @@
     "password": "Password",
     "username": "Username",
     "acc_without": "Account without",
-    "example": "Example"
+    "example": "Example",
+    "email": "Email"
   }
 }
