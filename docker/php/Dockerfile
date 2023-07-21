@@ -25,7 +25,11 @@ RUN apt-get -y install --fix-missing \
     libmcrypt-dev \
     libicu-dev \
     libonig-dev \
-    libxml2-dev
+    libxml2-dev \
+    supervisor 
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
 RUN docker-php-ext-install \
@@ -49,3 +53,13 @@ RUN docker-php-ext-install \
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
+
+ADD supervisord.conf /etc/supervisord.conf
+ADD setup.sh /var/www/setup.sh
+ADD cron.root /var/www/cron.root
+
+RUN mkdir -p /etc/supervisor/logs
+RUN chmod 755 /etc/supervisord.conf
+RUN crontab /var/www/cron.root
+
+CMD ["/usr/bin/supervisord"]

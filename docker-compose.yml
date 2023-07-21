@@ -50,15 +50,15 @@ services:
             - "6379:6379"
         networks:
             - laravel
-    frontend:
-        container_name: frontend_app
-        build:
-            context: .
-            dockerfile: ./docker/app/Dockerfile
-        ports:
-            - 2807:2807
-        networks:
-            - laravel
+    # frontend:
+    #     container_name: frontend_app
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/app/Dockerfile
+    #     ports:
+    #         - 2807:2807
+    #     networks:
+    #         - laravel
     mail_catcher:
         image: dockage/mailcatcher:0.7.1
         container_name: mailcatcher
