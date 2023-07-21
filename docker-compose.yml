@@ -59,6 +59,33 @@ services:
             - 2807:2807
         networks:
             - laravel
+    mail_catcher:
+        image: dockage/mailcatcher:0.7.1
+        container_name: mailcatcher
+        restart: on-failure:10
+        ports:
+            - "1080:1080"
+            - "1025:1025"
+        networks:
+            - laravel
+    minio:
+        image: minio/minio:latest
+        restart: always
+        command:
+            - server
+            - --console-address
+            - :9001
+            - /data
+        ports:
+            - 9001:9001
+        networks:
+            - laravel
+        environment:
+            MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio}
+            MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-miniostorage}
+            MINIO_REGION_NAME: ${MINIO_REGION_NAME:-us-east-1}
+        volumes:
+            - ${PATH_DATA:-./data}/minio:/data
 networks:
     laravel:
         driver: bridge
