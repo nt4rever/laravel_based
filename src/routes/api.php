@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum',])->group(function () {
             Route::post('/', 'store');
             Route::get('/all', 'adminGetAll')->middleware(['ability:0']); // 0 : Admin
             Route::get('/', 'index');
+            Route::put('/{id}', 'update');
         });
     });
 });
