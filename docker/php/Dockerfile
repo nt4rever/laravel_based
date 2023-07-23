@@ -26,7 +26,8 @@ RUN apt-get -y install --fix-missing \
     libicu-dev \
     libonig-dev \
     libxml2-dev \
-    supervisor 
+    supervisor \
+    cron
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -54,9 +55,9 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
-ADD supervisord.conf /etc/supervisord.conf
-ADD setup.sh /var/www/setup.sh
-ADD cron.root /var/www/cron.root
+ADD ./docker/php/supervisord.conf /etc/supervisord.conf
+ADD ./docker/php/setup.sh /var/www/setup.sh
+ADD ./docker/php/cron.root /var/www/cron.root
 
 RUN mkdir -p /etc/supervisor/logs
 RUN chmod 755 /etc/supervisord.conf

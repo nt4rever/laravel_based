@@ -5,7 +5,7 @@ export COMPOSER_ALLOW_SUPERUSER=1
 
 composer --no-interaction install
 
-cp .env.example .env
+# cp .env.example .env
 
 # php artisan telescope:install
 

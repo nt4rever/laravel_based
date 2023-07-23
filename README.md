@@ -5,6 +5,3 @@
     docker-compose up --build -d
     docker-compose run --rm app sh /var/www/setup.sh
 ```
-
-- Generate worklog 
-    - php artisan create_worklog -d yyyy/mm/dd

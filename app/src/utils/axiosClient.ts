@@ -30,7 +30,7 @@ axiosClient.interceptors.response.use(
   (error: any) => {
     const originalConfig = error.config;
     if (error.response.status === 401 && originalConfig?.url !== '/login') {
-      localStorage.removeItem('access_token');
+      localStorage.clear();
       window.location.href = '/login';
     } else {
       throw error.response.data;
